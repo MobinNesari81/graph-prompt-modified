@@ -21,7 +21,8 @@ class RelationshipLayer(nn.Module):
 
         if self.similarity == 'cos':
             x_norm = F.normalize(x, p=2, dim=1)
-            sim_matrix = self.relu(x_norm @ x_norm.T)
+            # sim_matrix = self.relu(x_norm @ x_norm.T)
+            sim_matrix = x_norm @ x_norm.T
         elif self.similarity == 'rbf':
             if self.gamma is None:
                 self.gamma = 1.0 / x.size(1)  
