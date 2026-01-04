@@ -127,12 +127,15 @@ def train(epoch):
 
             if args.weight_method == 'adaptive':
                 individual_losses = []
+                
+                # Set a variable for the masked anticipated output to avoid redundant computation
+                masked_anticipated_output = ground_truth_embedding * similarity_indicator
                 for i, relationship in enumerate(graph_list[:-1]):
                     if args.use_detach:
-                        dist = torch.norm((ground_truth_embedding * similarity_indicator).detach() - relationship,
+                        dist = torch.norm(masked_anticipated_output.detach() - relationship,
                                           p=2) ** 2 / ground_truth_embedding.numel()
                     else:
-                        dist = torch.norm((ground_truth_embedding * similarity_indicator) - relationship,
+                        dist = torch.norm(masked_anticipated_output - relationship,
                                           p=2) ** 2 / ground_truth_embedding.numel()
                     individual_losses.append(dist)
 
